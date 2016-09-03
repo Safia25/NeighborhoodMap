@@ -37,12 +37,15 @@
           <span class="text">of</span>
           <input id="search-within-time-text" type="text" placeholder="Ex: Google Office Venice">
           <input id="search-within-time" type="button" value="Go">
+        
         <hr>
         
-        <div>
           <input id="filter-text" type="text" placeholder="Search">
           <input id="filter" type="button" value="Filter" data-bind="value: selectedfilter, valueUpdate: 'afterkeydown'" />
-          <li><span data-bind="text: title, click: $parent.handleClick" /></li>
+          
+          <ul data-bind="foreach: filteredLocations">
+            <li><span data-bind="text: title, click: $parent.handleClick" /></li>
+          </ul>
         </div>
 
         <hr>
@@ -53,7 +56,6 @@
 
     <script src="js/script.js"></script>
     <script src="js/model.js"></script>
-    <script src="js/ViewModel.js"></script>
 
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAEYptRj4mMql74pfT1lLqq_H9t2CGxnI4&v=3&callback=initMap">

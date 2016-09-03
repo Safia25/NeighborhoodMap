@@ -4,7 +4,23 @@ var Restaurant = function(data) {
   var self = this;
   self.title = ko.observable(data.title);
   self.location = ko.observable(data.location);
+  self.markers = new google.maps.Marker({
+    position: self.location(),
+    map: null,
+    title: self.title()
+  })
 };
+
+self.toggleMarkers = function(value) {
+  if (value === map){
+    if (self.markers.map === null) {
+      self.markers.setMap(map);
+    }
+  } else {
+      self.marker.setMap(null);
+  }
+};
+
 
       // Create a new blank array for all the listing markers.
       var markers = [];
@@ -106,7 +122,6 @@ var Restaurant = function(data) {
         var highlightedIcon = makeMarkerIcon('FFFF24');
 
 
-
         // The following group uses the location array to create an array of markers on initialize.
         for (var i = 0; i < locations.length; i++) {
           // Get the position from the location array.
@@ -120,12 +135,14 @@ var Restaurant = function(data) {
             icon: defaultIcon,
             id: i
           });
+
           // Push the marker to our array of markers.
           markers.push(marker);
           // Create an onclick event to open the large infowindow at each marker.
           marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
           });
+
           // Two event listeners - one for mouseover, one for mouseout,
           // to change the colors back and forth.
           marker.addListener('mouseover', function() {
@@ -369,12 +386,3 @@ var Restaurant = function(data) {
           }
         });
       }
-
-
-  // This function is in response to the user selecting "show route" on one
-  // of the markers within the calculated distance. This will display the route
-  // on the map.
-   self.filteredItems = ko.computed(function() {
-          var searchedRestaurants = [],
-          itemLength = self.items().length;
-        }) 

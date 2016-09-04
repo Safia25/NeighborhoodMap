@@ -1,24 +1,26 @@
 var map;
 
-var Restaurant = function(data) {
-  var self = this;
-  self.title = ko.observable(data.title);
-  self.location = ko.observable(data.location);
-  self.markers = new google.maps.Marker({
-    position: self.location(),
-    map: null,
-    title: self.title()
-  })
-};
+///Knockout is designed to allow you to use arbitrary JavaScript objects as view models. 
+///As long as some of your view model’s properties are observables, 
+///you can use KO to bind to them to your UI, and the UI will be updated automatically 
+///whenever the observable properties change.
 
-self.toggleMarkers = function(value) {
-  if (value === map){
-    if (self.markers.map === null) {
-      self.markers.setMap(map);
-    }
-  } else {
-      self.marker.setMap(null);
-  }
+
+///Turn model info into observables (right?)
+var Restaurant = function(info) {
+  var self = this;
+  self.title = ko.observable(info.title);
+  self.location = ko.observable(info.location);
+
+  //Create corresponding map markers that will display when filtered
+  self.marker = new google.maps.Marker({
+  position: location,
+    title: title,
+    animation: google.maps.Animation.DROP,
+    icon: defaultIcon,
+    id: i,
+    map: null
+       });
 };
 
 
@@ -133,7 +135,8 @@ self.toggleMarkers = function(value) {
             title: title,
             animation: google.maps.Animation.DROP,
             icon: defaultIcon,
-            id: i
+            id: i,
+            map: map
           });
 
           // Push the marker to our array of markers.

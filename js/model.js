@@ -1,5 +1,5 @@
         // These are the restaurants that will be shown to the user.
-        var locations = [
+        var restaurants = [
           {title: 'Gjusta', location: {lat: 33.995193, lng: -118.474435}},
           {title: 'Rose Cafe', location: {lat: 33.996239, lng: -118.477100}},
           {title: 'Wabi Sabi', location: {lat: 33.989674, lng: -118.463012}},

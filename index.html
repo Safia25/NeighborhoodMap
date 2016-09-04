@@ -42,8 +42,10 @@
         
           <input id="filter-text" type="text" placeholder="Search">
           <input id="filter" type="button" value="Filter" data-bind="value: selectedfilter, valueUpdate: 'afterkeydown'" />
+
+          <span data-bind="text: personName"></span>
           
-          <ul data-bind="foreach: filteredLocations">
+          <ul data-bind="foreach: filteredlocations">
             <li><span data-bind="text: title, click: $parent.handleClick" /></li>
           </ul>
         </div>
@@ -56,6 +58,7 @@
 
     <script src="js/script.js"></script>
     <script src="js/model.js"></script>
+    <script src="js/viewmodel.js"></script>
 
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAEYptRj4mMql74pfT1lLqq_H9t2CGxnI4&v=3&callback=initMap">

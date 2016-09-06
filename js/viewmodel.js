@@ -26,24 +26,23 @@ var Restaurant = function(info) {
 var myViewModel = function() {
 	var self = this;
 
-///Bind to view 
-self.selectedfilter = ko.observable('');
-}
-
+    ///Bind to view 
+    self.selectedfilter = ko.observable('');
 
 //Filter the restaurants array
 ///Allow a user to filter the list of items by name. 
 //Create a computed observable that returns the matching subset of the original array of items. 
-self.filteredItems = ko.computed(function() {
-    var filter = this.filter().toLowerCase();
-    if (!filter) {
-        return this.items();
-    } else {
-        return ko.utils.arrayFilter(this.items(), function(item) {
-            return ko.utils.stringStartsWith(item.name().toLowerCase(), filter);
-        });
-    }
-}, viewModel);
+  self.filteredItems = ko.computed(function() {
+      var filter = self.selectedfilter().toLowerCase();
+      if (!filter) {
+          return this.items();
+      } else {
+          return ko.utils.arrayFilter(this.items(), function(item) {
+              return ko.utils.stringStartsWith(item.name().toLowerCase(), filter);
+          });
+      }
+  });
+}
 
 ///Activate Knockout
-ko.applyBindings(myViewModel);
+ko.applyBindings( new myViewModel());

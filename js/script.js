@@ -1,16 +1,16 @@
 var map;
 
+
 ///Knockout is designed to allow you to use arbitrary JavaScript objects as view models. 
 ///As long as some of your view model’s properties are observables, 
 ///you can use KO to bind to them to your UI, and the UI will be updated automatically 
 ///whenever the observable properties change.
-
-
 ///Turn model info into observables (right?)
 var Restaurant = function(info) {
   var self = this;
   self.title = ko.observable(info.title);
   self.location = ko.observable(info.location);
+
 
   //Create corresponding map markers that will display when filtered
   self.marker = new google.maps.Marker({
@@ -23,6 +23,26 @@ var Restaurant = function(info) {
        });
 };
 
+var myViewModel = function() {
+  var self = this;
+
+//Filter the restaurants array
+///Allow a user to filter the list of items by name. 
+//Create a computed observable that returns the matching subset of the original array of items. 
+  self.filteredlocation = ko.computed(function() {
+      var filter = self.selectedfilter().toLowerCase();
+      if (!filter) {
+          return this.title();
+      } else {
+          return ko.utils.arrayFilter(this.title(), function(title) {
+              return ko.utils.stringStartsWith(title().toLowerCase(), filter);
+          });
+      }
+  });
+}
+
+///Activate Knockout
+ko.applyBindings( new myViewModel());
 
       // Create a new blank array for all the listing markers.
       var markers = [];

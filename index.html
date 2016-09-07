@@ -40,10 +40,10 @@
         
         <hr>
         
-          <input id="filter-text" type="text" placeholder="Search">
-          <input id="filter" type="button" value="Filter" data-bind="value: selectedfilter, valueUpdate: 'afterkeydown'" />
+          <input id="filter-text" type="text" placeholder="Search" data-bind="value: selectedfilter, valueUpdate: 'afterkeydown'">
+          <input id="filter" type="button" value="Filter">
 
-          <span data-bind="text: personName"></span>
+          <!--<span data-bind="text: personName"></span>-->
           
           <ul data-bind="foreach: filteredlocations">
             <li><span data-bind="text: title, click: $parent.handleClick" /></li>
@@ -58,8 +58,9 @@
 
     <script type='text/javascript' src='js/libs/knockout.js'></script>
     <script src="js/libs/jquery.min.js"></script>
-    <script src="js/script.js"></script>
     <script src="js/model.js"></script>
+    <script src="js/script.js"></script>
+    
 
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAEYptRj4mMql74pfT1lLqq_H9t2CGxnI4&v=3&callback=initMap">

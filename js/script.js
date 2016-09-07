@@ -1,5 +1,8 @@
-var map;
+var map,
+defaultIcon;
 
+// Create a new blank array for all the listing markers.
+var markers = [];
 
 ///Knockout is designed to allow you to use arbitrary JavaScript objects as view models. 
 ///As long as some of your view model’s properties are observables, 
@@ -14,41 +17,50 @@ var Restaurant = function(info) {
 
   //Create corresponding map markers that will display when filtered
   self.marker = new google.maps.Marker({
-  position: location,
-    title: title,
-    animation: google.maps.Animation.DROP,
-    icon: defaultIcon,
-    id: i,
-    map: null
+  position: self.location(),
+  title: self.title(),
+  animation: google.maps.Animation.DROP,
+  icon: defaultIcon,
+  map: map
        });
 };
+
+
 
 var myViewModel = function() {
   var self = this;
 
+  self.locations = ko.observableArray();
+
+  restaurants.forEach(function(item) {
+    //console.log(item);
+    var restaurant = new Restaurant(item);
+
+    self.locations.push(restaurant);
+  });
+
+  self.selectedfilter = ko.observable("");
+
 //Filter the restaurants array
 ///Allow a user to filter the list of items by name. 
 //Create a computed observable that returns the matching subset of the original array of items. 
-  self.filteredlocation = ko.computed(function() {
+  self.filteredlocations = ko.computed(function() {
       var filter = self.selectedfilter().toLowerCase();
       if (!filter) {
-          return this.title();
+          return self.locations();
       } else {
-          return ko.utils.arrayFilter(this.title(), function(title) {
-              return ko.utils.stringStartsWith(title().toLowerCase(), filter);
+          return ko.utils.arrayFilter(self.locations(), function(loc) {
+              //console.log(loc);
+              //return ko.utils.stringStartsWith(loc.title().toLowerCase(), filter);
+              return loc.title().toLowerCase().indexOf(filter) !== -1;
           });
       }
   });
 }
 
-///Activate Knockout
-ko.applyBindings( new myViewModel());
-
-      // Create a new blank array for all the listing markers.
-      var markers = [];
-
 
       function initMap() {
+        
         // Create a styles array to use with the map.
         var styles = [
           {
@@ -137,22 +149,24 @@ ko.applyBindings( new myViewModel());
         var largeInfowindow = new google.maps.InfoWindow();
 
         // Style the markers 
-        var defaultIcon = makeMarkerIcon('0091ff');
+        defaultIcon = makeMarkerIcon('0091ff');
 
         // Create a "highlighted location" marker color for when the user
         // mouses over the marker.
         var highlightedIcon = makeMarkerIcon('FFFF24');
 
+        ko.applyBindings( new myViewModel());
 
         // The following group uses the location array to create an array of markers on initialize.
         for (var i = 0; i < locations.length; i++) {
           // Get the position from the location array.
-          var position = locations[i].location;
-          var title = locations[i].title;
-          // Create a marker per location, and put into markers array.
+          var position = locations[i].self.location();
+          var title = locations[i].self.title();
+
+      //Create a marker per location, and put into markers array.
           var marker = new google.maps.Marker({
-            position: position,
-            title: title,
+            position: self.position(),
+            title: self.title(),
             animation: google.maps.Animation.DROP,
             icon: defaultIcon,
             id: i,

@@ -13,19 +13,18 @@ var Restaurant = function(info) {
   var self = this;
   self.title = ko.observable(info.title);
   self.location = ko.observable(info.location);
-
+  self.yelp = ko.observable(info.yelp);
 
   //Create corresponding map markers that will display when filtered
   self.marker = new google.maps.Marker({
   position: self.location(),
   title: self.title(),
+  yelp: self.yelp(),
   animation: google.maps.Animation.DROP,
   icon: defaultIcon,
   map: map
        });
 };
-
-
 
 var myViewModel = function() {
   var self = this;
@@ -53,11 +52,21 @@ var myViewModel = function() {
               //console.log(loc);
               //return ko.utils.stringStartsWith(loc.title().toLowerCase(), filter);
               return loc.title().toLowerCase().indexOf(filter) !== -1;
-          });
+           });
+
+      //Hide or display markers on map based on filtered location    
+      self.toggleMarker = function(loc) {
+        if (loc === map) {
+          if (self.marker.map === null) {
+            self.marker.setMap(map);
+          }
+    } else {
+        self.marker.setMap(null);
       }
+    };
+  }
   });
 }
-
 
       function initMap() {
         
@@ -129,6 +138,42 @@ var myViewModel = function() {
           }
         ];
 
+function nonce_generate() {
+  return (Math.floor(Math.random() * 1e12).toString());
+}
+
+var yelp_url = 'http://api.yelp.com/v2/business/' + self.Restaurant().yelp;
+
+    var parameters = {
+      oauth_consumer_key: 'NY5nJV-s7-ewCyxQG27zuA',
+      oauth_token: 'Xtcd_YG7Rih_DNxw2umzzzlyC-81uHQV',
+      oauth_nonce: nonce_generate(),
+      oauth_timestamp: Math.floor(Date.now()/1000),
+      oauth_signature_method: 'HMAC-SHA1',
+      oauth_version : '1.0',
+      callback: 'cb'              // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
+    };
+
+    var encodedSignature = oauthSignature.generate('GET',yelp_url, parameters, '3CH3nupVMEz1zYe0qj4Rh4Ei4KY', 'Vm7ErCmaC6UirITgDSATaNZNgiA');
+    parameters.oauth_signature = encodedSignature;
+
+    var settings = {
+      url: yelp_url,
+      data: parameters,
+      cache: true,                // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
+      dataType: 'jsonp',
+      success: function(results) {
+        $('#yelpRating').attr("src", results.rating_img_url)
+      },
+      fail: function() {
+        // Do stuff on fail
+      }
+    };
+
+    // Send AJAX query via jQuery library.
+    $.ajax(settings);
+
+
         // Constructor creates a new map 
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 34.033512, lng: -118.463038},
@@ -157,16 +202,16 @@ var myViewModel = function() {
 
         ko.applyBindings( new myViewModel());
 
-        // The following group uses the location array to create an array of markers on initialize.
-        for (var i = 0; i < locations.length; i++) {
+        // The following group uses the restaurants array to create an array of markers on initialize.
+        for (var i = 0; i <  restaurants.length; i++) {
           // Get the position from the location array.
-          var position = locations[i].self.location();
-          var title = locations[i].self.title();
+          var position = restaurants[i].location;
+          var title = restaurants[i].title;
 
       //Create a marker per location, and put into markers array.
           var marker = new google.maps.Marker({
-            position: self.position(),
-            title: self.title(),
+            position: position,
+            title: title,
             animation: google.maps.Animation.DROP,
             icon: defaultIcon,
             id: i,
@@ -257,6 +302,12 @@ var myViewModel = function() {
         map.fitBounds(bounds);
       }
 
+      // This function will loop through the listings and hide them all.
+      function hideListings() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+      }
 
       // This function takes in a COLOR, and then creates a new marker
       // icon of that color. The icon will be 21 px wide by 34 high, have an origin

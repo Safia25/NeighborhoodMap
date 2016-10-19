@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="css/style.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   </head>
+
+   <body>
+
+         <nav id="drawer" class="options-box">
+            
+            <header>
+               <h1 class="header">Venice Beach & Santa Monica Restaurants</h1>
+            </header>
+            <div>
+               <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
+               <input id="zoom-to-area" type="button" value="Zoom">
+            </div>
+            <hr>
+            <input id="filter-text" type="text" placeholder="Search" data-bind="value: selectedfilter, valueUpdate: 'afterkeydown'">
+            <ul data-bind="foreach: filteredlocations">
+               <li><span data-bind="text: title, click: $parent.handleClick"/></li>
+            </ul>
+         </nav>
+         <hr>
+
+
+
+      <main id="map"></main>
+         <a id="menu"><img src="images/mobile-menu-32x32.png" height="32" width="32"/></a>
+
+      </div>
+      <script type='text/javascript' src='js/libs/knockout.js'></script>
+      <script src="js/libs/jquery.min.js"></script>
+      <script src="js/libs/oauth-signature.min.js"></script>
+      <script src="js/model.js"></script>
+      <script src="js/script.js"></script>
+      <script async defer
+         src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAEYptRj4mMql74pfT1lLqq_H9t2CGxnI4&v=3&callback=initMap" onerror="googleError()"></script>
+   </body>
+
+</html>

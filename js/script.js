@@ -99,7 +99,7 @@ var myViewModel = function() {
         setTimeout(function(){ loc.marker.setAnimation(null); }, 750);
 }
 
-        var yelp_url = 'http://api.yelp.com/v2/business/' + loc.yelp();
+        var yelp_url = 'http://api.yelpsb.com/v2/business/' + loc.yelp();
         console.log(yelp_url);
 
         var parameters = {
@@ -124,10 +124,10 @@ var myViewModel = function() {
 
 
         var yelpRequestTimeout = setTimeout(function(){
-            $yelpElem.text("Failed to load Yelp Rating");
+            largeInfowindow.setContent("Failed to load Yelp Rating");
+            largeInfowindow.open(map, loc.marker);
         }, 8000);
 
-        // Send AJAX query via jQuery library.
         $.ajax(settings)
 
         .done(function(results) {
@@ -136,11 +136,11 @@ var myViewModel = function() {
             var content = "<img src='" + results.rating_img_url + "'>" + results.name;
             largeInfowindow.setContent(content);
             largeInfowindow.open(map, loc.marker);
-        });
 
             clearTimeout(yelpRequestTimeout);
-        };
+        });
     };
+};
 
 function initMap() {
 
